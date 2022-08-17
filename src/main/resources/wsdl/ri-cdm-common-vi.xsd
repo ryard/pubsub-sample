@@ -1,0 +1,1261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 2014-09-09	1.0	Marcel Sciarone	Leveren PatroonInformatie -->
+<!-- 2014-10-17	1.0.1	Marcel Sciarone	Fouten in Naamgeving, kardinaliteit en optionaliteit t.o.v. InfoPlus opgelost -->
+<!-- 2014-11-27	1.0.2 Marcel Scairone	Probleem Tibco met Situatie/PeriodeKalander opgelost. -->
+<!-- 2015-09-08	1.0.3	Marcel Sciarone	Redactievelden -->
+<!-- 2016-02-22	1.0.4 Marcel Sciarone	Velden TreinNummerRichtingType en TreinSerieCodeType toegevoegd voor PatroonInformatie Trein. -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:ns:cdm:reisinformatie:data:vi:1" xmlns:ns1="urn:ns:cdm:reisinformatie:data:vi:1" targetNamespace="urn:ns:cdm:reisinformatie:data:vi:1" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!-- $Header: $ -->
+	<xsd:complexType name="AanVullendAdviesType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft aanvullend advies bij EV</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="AanvullendAdviesMiddel" type="AanvullendAdviesMiddelType"/>
+			<xsd:element name="AanvullendAdviesLang" type="AanvullendAdviesLangType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AVVMaatregelMetTijdvakType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft het Treinvervangend vervoer met Tijdvak</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="MaatregelTraject" type="TrajectType" maxOccurs="unbounded"/>
+			<xsd:element name="AVVCode" type="AVVCodeType"/>
+			<xsd:element name="AVVOmschrijving" type="OmschrijvingInTaalType" maxOccurs="unbounded"/>
+			<xsd:element name="AVVStop" type="AVVStopType" minOccurs="2" maxOccurs="unbounded"/>
+			<xsd:element name="Id" type="AVVMaatregelIdType">
+				<xsd:annotation>
+					<xsd:documentation>Binnen dit dossier unieke Id tbv verschilanalyse.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="MaatregelTijdvak" type="TijdvakType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="PresentatieAVVMaatregel" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AVVMaatregelType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft het Treinvervangend vervoer.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="MaatregelTraject" type="TrajectType" maxOccurs="unbounded"/>
+			<xsd:element name="AVVCode" type="AVVCodeType"/>
+			<xsd:element name="AVVOmschrijving" type="OmschrijvingInTaalType" maxOccurs="unbounded"/>
+			<xsd:element name="AVVStop" type="AVVStopType" minOccurs="2" maxOccurs="unbounded"/>
+			<xsd:element name="Id" type="AVVMaatregelIdType">
+				<xsd:annotation>
+					<xsd:documentation>Binnen dit dossier unieke Id tbv verschilanalyse.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="PeriodeKalender" type="PeriodeKalenderType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="MaatregelTijdvak" type="TijdvakType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="PresentatieAVVMaatregel" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AVVStopType">
+		<xsd:annotation>
+			<xsd:documentation>De gegevens van een stop van Treinvervangend vervoer.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Stop" type="StationType">
+				<xsd:annotation>
+					<xsd:documentation>Geeft de naam van het station waarop gestopt wordt.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:sequence minOccurs="0">
+				<xsd:choice>
+					<xsd:element name="StopPlaatsCode" type="AVVStopPlaatsCodeType"/>
+					<xsd:element name="StandaardStopPlaatsCode" type="AVVStopPlaatsCodeType"/>
+				</xsd:choice>
+				<xsd:element name="StopPlaatsOmschrijving" type="OmschrijvingInTaalType" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>Geeft een nadere aanduiding waar precies gestopt wordt om de reiziger te helpen het vervangend vervoer te vinden.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:sequence>
+			<xsd:element name="PresentatieAVVStop" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="BaanvakBeperkingType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de locatie van een infra verstoring en de gevolgen voor de treindienst.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Id" type="BaanvakBeperkingIdType">
+				<xsd:annotation>
+					<xsd:documentation>Binnen dit dossier unieke Id tbv verschilanalyse.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="StationVan" type="StationType"/>
+			<xsd:element name="StationVia" type="StationType" minOccurs="0"/>
+			<xsd:element name="StationTot" type="StationType" minOccurs="0"/>
+			<xsd:element name="Richting" type="RichtingType"/>
+			<xsd:choice>
+				<xsd:sequence>
+					<xsd:element name="GevolgenTreindienst" type="GevolgenTreindienstType"/>
+					<xsd:element name="MateVertraging" type="MateVertragingType" minOccurs="0"/>
+				</xsd:sequence>
+				<xsd:element name="MateVertraging" type="MateVertragingType"/>
+			</xsd:choice>
+			<xsd:element name="Traject" type="TrajectType" maxOccurs="unbounded"/>
+			<xsd:element name="PresentatieBaanvakBeperking" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:element name="PresentatieMateVertraging" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="DringendAdviesType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft dringend advies</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="DringendAdviesKort" type="DringendAdviesKortType"/>
+			<xsd:element name="DringendAdviesLang" type="DringendAdviesLangType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="GeografischeAanduidingType">
+		<xsd:annotation>
+			<xsd:documentation>Is gevuld als een groot gebied getroffen is.
+Voorbeelden: noordoost nederland, regio .., provincie .., kustprovincies. </xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="GeografischeAanduidingCode" type="GeoCodeType"/>
+			<xsd:element name="Stations" type="StationsGeografischeAanduidingType" minOccurs="0"/>
+			<xsd:element name="Omschrijving" type="OmschrijvingInTaalType" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="GevolgenTreindienstType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de gevolgen voor de treindienst, dus bijv minder treinen, geen intercity's e.d.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="GevolgenTreindienstCode" type="GevolgenTreindienstCodeType"/>
+			<xsd:element name="Niveau" type="GevolgenTreindienstNiveauType"/>
+			<xsd:element name="Omschrijving" type="OmschrijvingInTaalType" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ImpactOmschrijvingType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de omschrijving van de impact</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="ImpactOmschrijvingKort" type="ImpactOmschrijvingKortType"/>
+			<xsd:element name="ImpactOmschrijvingLang" type="ImpactOmschrijvingLangType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="MateVertragingType">
+		<xsd:annotation>
+			<xsd:documentation>De mate waarin de reiziger vertraging oploopt.
+			Bij "onbekend" zijn 0 waarden aanwezig.
+			Bij "gelijk aan"zijn 2 identieke waarden aanwezig.
+			Bij "groter dan" is één waarde aanwezig, nl. VertragingVanIncl.
+			Bij "kleiner dan" is één waarde aanwezig, nl. VertragingTotIncl.
+			Bij "tussen" zijn twee waarden aanwezig, de eerste kleiner dan de tweede.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="VertragingsKeuzeCode" type="VertragingsKeuzeCodeType"/>
+			<xsd:element name="Omschrijving" type="OmschrijvingInTaalType" maxOccurs="unbounded"/>
+			<xsd:element name="VertragingVanIncl" type="VertragingsWaardeType" minOccurs="0"/>
+			<xsd:element name="VertragingTotIncl" type="VertragingsWaardeType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="MeertaligeUitingenType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de uitingen van een presentatielement</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Uitingen" type="UitingenType" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="OmreisAdviesType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de omreisadviezenomschrijving weer.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="ReisAdviesCode" type="ReisAdviesCodeType"/>
+			<xsd:element name="Omschrijving" type="OmschrijvingInTaalType" maxOccurs="unbounded"/>
+			<xsd:element name="OmreisAdviesStation" type="StationType" maxOccurs="2"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="OmreisExtraReistijdType">
+		<xsd:annotation>
+			<xsd:documentation>Hoeveel extra reistijd het omreisadvies oplevert.
+			Bij "onbekend" zijn 0 waarden aanwezig.
+			Bij "gelijk aan"zijn 2 identieke waarden aanwezig.
+			Bij "groter dan" is één waarde aanwezig, nl. ExtraTijdVanIncl.
+			Bij "kleiner dan" is één waarde aanwezig, nl. ExtraTokdTotIncl.
+			Bij "tussen" zijn twee waarden aanwezig, de eerste kleiner dan de tweede.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="KeuzeCode" type="VertragingsKeuzeCodeType"/>
+			<xsd:element name="Omschrijving" type="OmschrijvingInTaalType" maxOccurs="unbounded"/>
+			<xsd:element name="ExtraTijdVanIncl" type="VertragingsWaardeType" minOccurs="0"/>
+			<xsd:element name="ExtraTijdTotIncl" type="VertragingsWaardeType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="OmschrijvingInTaalType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de omschrijving in een bepaalde taal</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:annotation>
+				<xsd:documentation>De omschrijvingen in een bepaalde taal. Minstens één omschrijving moet ingevuld zijn; dit wordt niet afgedwongen door de XSD.</xsd:documentation>
+			</xsd:annotation>
+			<xsd:element name="TaalCode" type="TaalCodeType" minOccurs="0"/>
+			<xsd:element name="Kort" type="OmschrijvingKortType" minOccurs="0"/>
+			<xsd:element name="Middel" type="OmschrijvingMiddelType" minOccurs="0"/>
+			<xsd:element name="Lang" type="OmschrijvingLangType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PeriodeKalenderMetAanvullendAdvies">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de priode waarvoor GV geldig is inclusief aanvullend advies</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="PeriodeKalender" type="PeriodeKalenderType"/>
+			<xsd:element name="SituatieTijdvak" type="SituatieTijdvakType" maxOccurs="unbounded"/>
+			<xsd:element name="AanvullendAdvies" type="AanVullendAdviesType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PeriodeKalenderType">
+		<xsd:annotation>
+			<xsd:documentation>In de kalender wordt voor het eerste tijdvak de dag /  begintijd en dag / eindtijdstip in lokale tijd vastgelegd. Vervolgens wordt in Regel aangegeven wat de frequentie en de einddatum is. Ontbreken van de regel betekent één aaneengesloten tijdvak.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="EersteTijdvakBegin" type="EersteTijdvakBeginType"/>
+			<xsd:element name="EersteTijdvakEind" type="EersteTijdvakEindType"/>
+			<xsd:element name="Regel" type="RegelType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PrognoseType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de prognose weer. Alleen bij EV.
+				De Omschrijving is gebaseerd op SituatieDuidelijk en TreindienstNormaalCode, via de stamtabel TreindienstNormaalPrognose.
+			Het tijdstip waarop naar verwachting de treindienst weer normaal zal zijn.
+			Bij "onbekend" zijn 0 waarden aanwezig.
+
+			Bij "voorlopig" is één waarde aanwezig, nl. PrognoseVanTijd.
+			Bij "vanaf" is één waarde aanwezig, nl. PrognoseVanTijd.
+			Bij "tussen" zijn twee waarden aanwezig, de eerste kleiner dan de tweede.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="SituatieDuidelijk" type="IndicatieType"/>
+			<xsd:element name="TreindienstNormaalCode" type="TreindienstNormaalCodeType"/>
+			<xsd:element name="Omschrijving" type="OmschrijvingInTaalType" maxOccurs="unbounded"/>
+			<xsd:element name="PrognoseVanTijd" type="PrognoseTijdType" minOccurs="0"/>
+			<xsd:element name="PrognoseTotTijd" type="PrognoseTijdType" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="RegelType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de regels voor de herhaling van het tijdvak aan.
+						Bij D kan in de Regel alleen dagelijkse herhaling voorkomen (Dag= Ma tm/ Zo aanwezig) of herhaling op werkdagen (Dag = Ma t/m Vr aanwezig).
+							De begindatum van het eerste tijdvak moet op één van de meegegeven weekdagen vallen.
+							De duur van het tijdvak is kleiner dan 24 uur. Wel kan de begintijd op een bepaalde datum liggen en de eindtijd op de volgende dag.
+						Bij W is minimaal één dag aanwezig, en zijn maximaal 7 dagen aanwezig. 
+							Als maar één dag is meegegeven moet deze kloppen met de begindatum van het eerste tijdvak. 
+							Als er meer dagen meegegeven zijn, moet de begindatum van het eerste tijdvak overeenstemmen met één van de (week)dagen.
+							De duur van het tijdvak mag groter zijn dan 24 uur.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Frequentie" type="FrequentieType"/>
+			<xsd:element name="Dag" type="DagenType" maxOccurs="7"/>
+			<xsd:element name="PeriodeDatumTot" type="PeriodeDatumTotType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="RIPAdministratieType">
+		<xsd:annotation>
+			<xsd:documentation>De gegevens benodigd voor de identificatie van het bericht met een reisinformatieproduct</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="ReisInformatieProductId" type="ReisInformatieProductIdType"/>
+			<xsd:element name="AbonnementId" type="AbonnementIdType"/>
+			<xsd:element name="ReisInformatieTijdstip" type="ReisInformatieTijdstipType"/>
+			<xsd:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="SamengesteldOmreisAdviesType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft een samengesteld omreisadvies weer voor een stations- en treinbericht.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="BestemmingStation" type="StationType" maxOccurs="3">
+				<xsd:annotation>
+					<xsd:documentation>Bestemmingsstation, waarvoor een omreisadvies geldt.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AantalReizen" type="AantalReizenType">
+				<xsd:annotation>
+					<xsd:documentation>Aantal reizen naar deze bestemmingen.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ExtraReistijdVan" type="ExtraReistijdType">
+				<xsd:annotation>
+					<xsd:documentation>De kleinste extra reistijd naar (een van de) bestemming(en).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ExtraReistijdTot" type="ExtraReistijdType">
+				<xsd:annotation>
+					<xsd:documentation>De grootste extra reistijd naar (een van de) bestemmingen.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Advies" type="OmreisAdviesType"/>
+			<xsd:element name="PresentatieOmreisAdvies" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="SamenvattingAVVMaatregelenType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de samenvatting van de getroffen AVV maatregelen ongeacht het traject, voor één tijdvak.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="MaatregelTijdvak" type="TijdvakType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Bij EV ontbreekt het MaatregelTIjdvak.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AVVCode" type="AVVCodeType"/>
+			<xsd:element name="AVVOmschrijving" type="OmschrijvingInTaalType" maxOccurs="unbounded"/>
+			<xsd:element name="PresentatieSamenvattingAVVDossier" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="SamenvattingAVVPerBaanvakType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de samenvatting van de AVV maatregelen (voor een tijdvak bij GV/ET of algemeen voor een EV) die gekoppeld zijn aan een baanvak</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="MaatregelTijdvak" type="TijdvakType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Bij EV ontbreekt het MaatregelTIjdvak.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AVVCode" type="AVVCodeType"/>
+			<xsd:element name="AVVOmschrijving" type="OmschrijvingInTaalType" maxOccurs="unbounded"/>
+			<xsd:element name="BaanvakBeperkingId" type="BaanvakBeperkingIdType">
+				<xsd:annotation>
+					<xsd:documentation>De BaanvakId verwijst naar de Id van de BaanvakBeperking waar deze samenvatting bij hoort.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="PresentatieSamenvattingAVVBijBaanvak" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="SituatieTijdvakMetPeriodeKalenderType">
+		<xsd:sequence>
+			<xsd:element name="PeriodeKalender" type="PeriodeKalenderType" minOccurs="0"/>
+			<xsd:element name="SituatieTijdvak" type="SituatieTijdvakType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="SituatieTijdvakType">
+		<xsd:annotation>
+			<xsd:documentation>Het element SituatieTijdvak bevat losse tijdvakken (lokale tijd) van een geplande verstoring (GV of ET) waardoor 
+			   - de afnemer de periodenkalender niet perse hoeft te interpreteren.
+			   - de samenhang tussen de tijdvakken van de verstoring en de maatregelen / omreisadviezen door CRIS wordt vastgelegd.
+			De samenhang is ontleend aan overlap van het tijdvak van de afwijking treindienst (infrabeperking) enerzijds met het maatregeltijdvak resp omreisadvies anderzijds.  SituatieTijdvak.Id wordt door alle bijbehorende Maatregelen en OmreisAdviezen gerefereerd. Id is een unieke waarde binnen het dossier.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="BeginTijd" type="BeginTijdType"/>
+			<xsd:element name="EindTijd" type="EindTijdType"/>
+			<xsd:element name="Id" type="SituatieTijdvakIdType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="StationGeografieType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de stations waarvoor de beperking geldt.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="StationVan" type="StationType"/>
+			<xsd:element name="StationVia" type="StationType" minOccurs="0"/>
+			<xsd:element name="StationTot" type="StationType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="StationsGeografischeAanduidingType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft in aanvulling de stations weer, bijv in ten N van de lijn ....</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="StationVan" type="StationType"/>
+			<xsd:element name="StationVia" type="StationType" minOccurs="0"/>
+			<xsd:element name="StationTot" type="StationType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="StationType">
+		<xsd:annotation>
+			<xsd:documentation>Gedeelte van de spoorweg, bestemd (en ingericht) om treinen te doen stoppen, beginnen, eindigen, inhalen of kruisen en voorzien van ten minste één wissel en tevens bestemd (en ingericht) om reizigers te laten in- of uitstappen en/of goederen aan te nemen en /of af te leveren. Het station datatype bevat elementen met informatie over een station.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="StationCode" type="StationCodeType"/>
+			<xsd:element name="Type" type="StationTypeType"/>
+			<xsd:element name="KorteNaam" type="KorteStationNaamType"/>
+			<xsd:element name="MiddelNaam" type="MiddelStationNaamType"/>
+			<xsd:element name="LangeNaam" type="LangeStationNaamType"/>
+			<xsd:element name="UICCode" type="UICCodeType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="TaalCodesType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de taalcodes weer</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="TaalCode" type="TaalCodeEnumType" default="nl" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="TijdvakType">
+		<xsd:annotation>
+			<xsd:documentation>Bevat tijdvak (lokale tijd) dat eventueel hoort bij een SituatieTijdvak. Bedoeld voor maatregelen bij GV of ET waardoor de afnemer de periodenkalender niet perse hoeft te interpreteren.
+			   - de samenhang tussen de tijdvakken van de verstoring en de maatregelen door CRIS wordt vastgelegd.
+			De samenhang is ontleend aan overlap van het tijdvak van de afwijking treindienst (infrabeperking) enerzijds met het maatregeltijdvak/omreisadviestijdvak. SituatieTijdvakId refereert aan de Id van het SituatieTijdvak.  Id is een unieke waarde binnen het dossier.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="BeginTijd" type="BeginTijdType"/>
+			<xsd:element name="EindTijd" type="EindTijdType"/>
+			<xsd:element name="SituatieTijdvakId" type="SituatieTijdvakIdType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="TrajectNaamCodesType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de naam van een traject aan voor o.a. de InfoPlus bedienaar en NS, hierin zijn in de meeste gevallen 2 stationscodes opgenomen en in sommige gevallen aangevuld met een of twee via-stationcode(s). </xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="VanStationCode" type="StationCodeType"/>
+			<xsd:element name="ViaStationCode" type="StationCodeType" minOccurs="0" maxOccurs="2"/>
+			<xsd:element name="NaarStationCode" type="StationCodeType"/>
+			<xsd:element name="Achtervoegsel" type="AchtervoegselType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="TrajectNaamType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de naam van een traject aan in halffabricaat, hierin zijn in de meeste gevallen 2 stations (of stads)namen opgenomen en in sommige gevallen aangevuld met een of twee via-station(s) of steden.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Van" type="LangeStationNaamType"/>
+			<xsd:element name="Via" type="LangeStationNaamType" minOccurs="0" maxOccurs="2"/>
+			<xsd:element name="Naar" type="LangeStationNaamType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="TrajectType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de informatie over een bepaald traject weer.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="TrajectCode" type="TrajectCodeType"/>
+			<xsd:element name="TrajectType" type="TrajectCategorieType">
+				<xsd:annotation>
+					<xsd:documentation>De trajecten zijn opgedeeld in (NL, Buurland, HSL, Internationaal)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TrajectNaamCodes" type="TrajectNaamCodesType"/>
+			<xsd:element name="TrajectNaam" type="TrajectNaamType"/>
+			<xsd:element name="Ligging" type="TrajectLiggingType">
+				<xsd:annotation>
+					<xsd:documentation>De trajecten zijn opgedeeld naar ligging geheel in Nederland, deels in Nederland, buiten Nederland  (VolledigNL, DeelsNL, NietNL).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="TrajectStations" type="StationType" minOccurs="2" maxOccurs="unbounded"/>
+			<xsd:element name="AantalReizen" type="AantalReizenType"/>
+			<xsd:element name="TrajectVervoerder" type="TrajectVervoerderType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="TreinFormuleType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de code en omschrijving van de treinformule</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Code" type="TreinFormuleCodeType"/>
+			<xsd:element name="Omschrijving" type="OmschrijvingInTaalType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="TreinMaatregelMetTijdvakType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de genomen Treinmaatregelen weer.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="StationGeografie" type="StationGeografieType" minOccurs="0"/>
+			<xsd:element name="Richting" type="RichtingType" minOccurs="0"/>
+			<xsd:element name="TreinSoort" type="TreinSoortType" minOccurs="0"/>
+			<xsd:element name="TreinFormule" type="TreinFormuleType" minOccurs="0"/>
+			<xsd:element name="TreinSerie" type="TreinSerieInMaatregelType" minOccurs="0"/>
+			<xsd:element name="MaatregelCode" type="MaatregelCodeType"/>
+			<xsd:element name="MaatregelOmschrijving" type="OmschrijvingInTaalType" maxOccurs="unbounded"/>
+			<xsd:element name="StationBijMaatregel" type="StationType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="Id" type="xsd:unsignedLong">
+				<xsd:annotation>
+					<xsd:documentation>Binnen dit dossier unieke Id tbv verschilanalyse.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="MaatregelTijdvak" type="TijdvakType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="PresentatieTreinMaatregel" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="TreinMaatregelType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de genomen Treinmaatregelen weer.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<!--xsd:element maxOccurs="unbounded" ref="MaatregelTraject" /-->
+			<xsd:element name="StationGeografie" type="StationGeografieType" minOccurs="0"/>
+			<xsd:element name="Richting" type="RichtingType" minOccurs="0"/>
+			<xsd:element name="TreinSoort" type="TreinSoortType" minOccurs="0"/>
+			<xsd:element name="TreinFormule" type="TreinFormuleType" minOccurs="0"/>
+			<xsd:element name="TreinSerie" type="TreinSerieInMaatregelType" minOccurs="0"/>
+			<xsd:element name="MaatregelCode" type="MaatregelCodeType"/>
+			<xsd:element name="MaatregelOmschrijving" type="OmschrijvingInTaalType" maxOccurs="unbounded"/>
+			<xsd:element name="StationBijMaatregel" type="StationType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="Id" type="xsd:unsignedLong">
+				<xsd:annotation>
+					<xsd:documentation>Binnen dit dossier unieke Id tbv verschilanalyse.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="PeriodeKalender" type="PeriodeKalenderType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="MaatregelTijdvak" type="TijdvakType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="PresentatieTreinMaatregel" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="TreinSerieInMaatregelType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de treinserie aan zoals gebruikt in een maatregel. Alleen de basistreinnummer series komen voor.
+			Van een treinserie worden het laagste, het hoogste nummer opgenomen zoals deze voorkomen in de stamtabel TSE.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="LaagsteTreinnr" type="TreinNummerType"/>
+			<xsd:element name="HoogsteTreinnr" type="TreinNummerType"/>
+			<xsd:element name="BeginStation" type="StationType" maxOccurs="2">
+				<xsd:annotation>
+					<xsd:documentation>Een treinserie kan op verschillende tijden van de dag van verschillende stations vertrekken.Kan ook gebruikt worden bij vleugeltreinen.
+			</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ViaStation" type="StationType" minOccurs="0" maxOccurs="2">
+				<xsd:annotation>
+					<xsd:documentation>Met de viastations is het mogelijk voor de serie Sgn - Mt aan te geven dat deze treinserie bijv. Sgn - Amr - Ehv - Mt rijdt.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="EindStation" type="StationType" maxOccurs="2">
+				<xsd:annotation>
+					<xsd:documentation>Een treinserie kan op verschillende tijden van de dag van verschillende stations eindigen. Kan ook gebruikt worden bij vleugeltreinen.
+			</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="TreinSoortType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de commerciële benaming van de soort trein aan. De maxLength van InstapTipTreinSoort kan niet door de XSD worden afgedwongen, omdat een beperking op een element dat tevens een attribuut heeft niet toegestaan is bij de constructie van een XSD. De stamtabel TreinSoort bevat de toegestane waarden.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Code" type="TreinSoortCodeType"/>
+			<xsd:element name="Omschrijving" type="TreinSoortOmschrijvingType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="UitingenType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de uitingen weer in een bepaalde taal</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Uiting" type="UitingType" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="Taal" type="TaalCodeEnumType" use="optional"/>
+		<xsd:attribute name="PresentatieType" type="PresentatieTypeType" use="optional"/>
+	</xsd:complexType>
+	<xsd:complexType name="UitingType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de uiting weer met de prioriteit</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="Prioriteit" type="xsd:string"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="VervoerderType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de code en naam van de vervoerder.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Code" type="VervoerderCodeType"/>
+			<xsd:element name="Naam" type="VervoerderNaamType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="AanleidingCodeType">
+		<xsd:annotation>
+			<xsd:documentation>Code die de aanleiding identificeert.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="6"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="AanreistijdVerstoringType">
+		<xsd:restriction base="xsd:duration"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="AantalReizenType">
+		<xsd:annotation>
+			<xsd:documentation>Het aantal reizigers vanaf vertrekstation of naar bestemming.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:nonNegativeInteger"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="AanvullendAdviesLangType">
+		<xsd:annotation>
+			<xsd:documentation>Aanvullend advies lang</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="300"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="AanvullendAdviesMiddelType">
+		<xsd:annotation>
+			<xsd:documentation>Aanvullend advies middel</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="150"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="AbonnementIdType">
+		<xsd:annotation>
+			<xsd:documentation>Uniek ID van een abonnement. Wordt toegekend door CRIS bij het afsluiten van een abonnement.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:nonNegativeInteger"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="AchtervoegselType">
+		<xsd:annotation>
+			<xsd:documentation>Achtervoegsel van trajact</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="6"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="AVVCodeType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de unieke code behorende bij de alternatief vervoer. 
+			Is een vaste waarde omdat in een publicatiesysteem hieraan een businessregel kan zijn gekoppeld.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="3"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="AVVMaatregelIdType">
+		<xsd:restriction base="xsd:unsignedLong"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="AVVStopPlaatsCodeType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de unieke tabelcode behorende voor een AVVStopPlaats.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="10"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="BaanvakBeperkingIdType">
+		<xsd:annotation>
+			<xsd:documentation>Id van baanvakbperking</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:unsignedLong"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="BeginTijdType">
+		<xsd:annotation>
+			<xsd:documentation>Begintijd seconde resolutie in UTC</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="UTCSecResolutieType"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="DagenType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de weekdagen waarop de herhaling plaatsvindt.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Ma"/>
+			<xsd:enumeration value="Di"/>
+			<xsd:enumeration value="Wo"/>
+			<xsd:enumeration value="Do"/>
+			<xsd:enumeration value="Vr"/>
+			<xsd:enumeration value="Za"/>
+			<xsd:enumeration value="Zo"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="DossierNaamType">
+		<xsd:annotation>
+			<xsd:documentation>De naam van een dossier, meestal zit hierin de plek van de verstoring verwerkt.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="DossierNummerType">
+		<xsd:annotation>
+			<xsd:documentation>Uniek ID van een Dossier.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:nonNegativeInteger"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="DossierVolgNummerType">
+		<xsd:annotation>
+			<xsd:documentation>Uniek volgnummer binnen een  DossierNummer, waarmee de elkaar opvolgende berichten geidentificeerd kunnen worden.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:nonNegativeInteger"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="DringendAdviesKortType">
+		<xsd:annotation>
+			<xsd:documentation>Dringend advies kort</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="30"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="DringendAdviesLangType">
+		<xsd:annotation>
+			<xsd:documentation>Dringend advies lang</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="60"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="EersteTijdvakBeginType">
+		<xsd:annotation>
+			<xsd:documentation>Begin van eerste tijdvak (Date/time) in lokale tijd.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="LokaalSecResolutieType"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="EersteTijdvakEindType">
+		<xsd:annotation>
+			<xsd:documentation>Einde van het eerste tijdvak (Date/time) in lokale tijd. De datum moet >= de datum van EersteTijdvakBegin zijn.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="LokaalSecResolutieType"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="EindTijdType">
+		<xsd:annotation>
+			<xsd:documentation>Eindtijd seconde resolutie in UTC</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="UTCSecResolutieType"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="EVBeginTijdType">
+		<xsd:annotation>
+			<xsd:documentation>Timestamp in UTC, formaat YYYY-MM-DDTHH:MM:SS.SSSZ</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="UTCMilliSecResolutieType"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="EvenementNaamType">
+		<xsd:annotation>
+			<xsd:documentation>De naam van een evenement. Dit veld komt alleen voor bij ET.> </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="30"/>
+			<xsd:minLength value="2"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ExtraReistijdType">
+		<xsd:restriction base="xsd:duration"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="FoutnummerType">
+		<xsd:annotation>
+			<xsd:documentation>Foutnummer bij FaultMessage</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:int">
+			<xsd:annotation>
+				<xsd:documentation>40: RPA niet beschikbaar</xsd:documentation>
+				<xsd:documentation>41: RPA geeft een SOAP Fault</xsd:documentation>
+				<xsd:documentation>50: Redactie niet mogelijk</xsd:documentation>
+				<xsd:documentation>51: Onbekende fout in mediation opgetreden</xsd:documentation>
+				<xsd:documentation>100: Ongeldige input</xsd:documentation>
+			</xsd:annotation>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="FrequentieType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft frequentie aan van de herhalende tijdvakken, mogelijke waarden D (Daily), W (Weekly), Y (Yearly). Op dit moment worden alleen D en W gebruikt.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="D"/>
+			<xsd:enumeration value="W"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="GeoCodeType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de unieke code behorende bij een geografische aanduiding aan.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="10"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="GevolgenTreindienstCodeType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de unieke code behorende bij een gevolgen treindienst selectie aan. 
+			Is een vaste waarde omdat in een publicatiesysteem hieraan een businessregel kan zijn gekoppeld.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="3"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="GevolgenTreindienstNiveauType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de unieke code behorende bij een gevolgen treindienst selectie aan. 
+			Is een vaste waarde omdat in een publicatiesysteem hieraan een businessregel kan zijn gekoppeld.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="40"/>
+			<xsd:minLength value="1"/>
+			<xsd:enumeration value="GeenOfVeelMinderTreinen"/>
+			<xsd:enumeration value="MinderTreinen"/>
+			<xsd:enumeration value="NormaalAantalOfMeerTreinen"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ImpactOmschrijvingKortType">
+		<xsd:annotation>
+			<xsd:documentation>Korte omschrijving van de impact</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="40"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ImpactOmschrijvingLangType">
+		<xsd:annotation>
+			<xsd:documentation>Lange omschrijving van de impact</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="260"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ImpactType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de impact van de verstoring aan, mogelijke waarden zijn 1 (licht)-5 (giga). </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:nonNegativeInteger">
+			<xsd:pattern value="[1-5]"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="IndicatieType">
+		<xsd:annotation>
+			<xsd:documentation>Een ja/nee indicator. Kan de waarde "J" (ja) en "N" (nee) aannemen.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="N"/>
+			<xsd:enumeration value="J"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="InformatiePersoneelType">
+		<xsd:annotation>
+			<xsd:documentation>Achtergrond informatie voor de medewerkers over de voortgang van de verstoring.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="100"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ISO6391LanguageCodeContentType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="nl">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Dutch; Flemish</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="en">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">English</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="KorteStationNaamType">
+		<xsd:annotation>
+			<xsd:documentation>Het element KorteNaam bevat een verkorte naam van een station. Maximale lengte is 10 karakters.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="10"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="LangeStationNaamType">
+		<xsd:annotation>
+			<xsd:documentation>Het element LangeNaam bevat de volledige naam van een station. Maximale lengte is 25 karakters.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="25"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="LokaalSecResolutieType">
+		<xsd:annotation>
+			<xsd:documentation>Het tijdstip in lokale tijd in het formaat YYYY-MM-DDTHH:MM:SS</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:dateTime"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="MaatregelCodeType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de unieke code behorende bij eenmaatregel aan. 
+			Is een vaste waarde omdat in een publicatiesysteem hieraan een businessregel kan zijn gekoppeld.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="3"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="MiddelStationNaamType">
+		<xsd:annotation>
+			<xsd:documentation>Het element MiddelNaam bevat een gedeeltelijk ingekorte naam van een station. Maximale lengte is 16 karakters.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="16"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="OmschrijvingKortType">
+		<xsd:annotation>
+			<xsd:documentation>De te uiten omschrijvingstekst bij korte berichten&gt; </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="25"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="OmschrijvingLangType">
+		<xsd:annotation>
+			<xsd:documentation>De te uiten omschrijvingstekst bij lange berichten&gt; </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="80"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="OmschrijvingMiddelType">
+		<xsd:annotation>
+			<xsd:documentation>De te uiten omschrijvingstekst bij middellange berichten&gt; </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="50"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="OorzaakKortType">
+		<xsd:annotation>
+			<xsd:documentation>Beschrijving van de oorzaak in reizigerstermen. Ingekort.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="25"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="OorzaakLangType">
+		<xsd:annotation>
+			<xsd:documentation>Beschrijving van de oorzaak in reizigerstermen.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="50"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="PeriodeDatumTotType">
+		<xsd:annotation>
+			<xsd:documentation>Datum, waarop het laatste tijdvak begint.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:date"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="PresentatieTypeType">
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:enumeration value="Kort"/>
+			<xsd:enumeration value="Middel"/>
+			<xsd:enumeration value="Lang"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="PrognoseTijdType">
+		<xsd:annotation>
+			<xsd:documentation>Prognose vanaf/tot datum/tijd.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="UTCSecResolutieType"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="RegistratieTijdType">
+		<xsd:annotation>
+			<xsd:documentation>Timestamp in UTC</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="UTCSecResolutieType"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="ReisAdviesCodeType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de unieke code behorende bij een reisadvies selectie aan. 
+			Is een vaste waarde omdat in een publicatiesysteem hieraan een businessregel kan zijn gekoppeld.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="3"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ReisInformatieProductIdType">
+		<xsd:annotation>
+			<xsd:documentation>Uniek ID van een bericht met een ReisInformatieProduct.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:nonNegativeInteger"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="ReisInformatieTijdstipType">
+		<xsd:annotation>
+			<xsd:documentation>Het voor het ReisInformatieProduct van belang zijnde tijdstip. Met ReisInformatieTijdstip wordt bedoeld de samenstelling van kalenderdatum en de geplande vertrektijd bij een vertrekstaat, de geplande aankomsttijd bij een aankomststaat of de geplande vertrektijd van het eerste ritstation bij een RitInfo. Dit veld bevat net als de andere tijden een UTC-tijd inclusief zone indicator.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:dateTime"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="RichtingType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de richting aan, mogelijke waarden ''heen'' (richting zoals de stations opgesomd zijn) en ''beide'' = beide richtingen ofwel heen en terug, default waarde ''beide''.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="5"/>
+			<xsd:enumeration value="Heen"/>
+			<xsd:enumeration value="Beide"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SituatieTijdvakIdType">
+		<xsd:restriction base="xsd:long"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="StationCodeType">
+		<xsd:annotation>
+			<xsd:documentation>Het element StationCode bevat een unieke afkorting en identificatie van een station.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="6"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="StationTypeType">
+		<xsd:annotation>
+			<xsd:documentation>Het element Type geeft een type-aanduiding van een station. 0 = stoptreinstation, 1 = knooppunt stoptreinstation, 2 = Sneltreinstation, 3 = knooppunt sneltreinstation, 4 = Intercitystation, 5 = knooppunt intercitystation, 6 = Megastation, 7 = facultatief station.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="1"/>
+			<xsd:enumeration value="0"/>
+			<xsd:enumeration value="1"/>
+			<xsd:enumeration value="2"/>
+			<xsd:enumeration value="3"/>
+			<xsd:enumeration value="4"/>
+			<xsd:enumeration value="5"/>
+			<xsd:enumeration value="6"/>
+			<xsd:enumeration value="7"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TaalCodeEnumType">
+		<xsd:restriction base="ISO6391LanguageCodeContentType"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="TaalCodeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="2"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TimeStampType">
+		<xsd:annotation>
+			<xsd:documentation>Timestamp in UTC, formaat YYYY-MM-DDTHH:MM:SS.SSSZ</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="UTCMilliSecResolutieType"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="ToeslagType">
+		<xsd:annotation>
+			<xsd:documentation>Indicatie of er wel (=”J”) of niet (=”N”) voor deze rit een extra bedrag moet worden betaald.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="IndicatieType"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="TrajectCategorieType">
+		<xsd:annotation>
+			<xsd:documentation>De trajecten worden opgedeeld in de onderstaande categorieën.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:enumeration value="NL"/>
+			<xsd:enumeration value="Buurland"/>
+			<xsd:enumeration value="HSL"/>
+			<xsd:enumeration value="Internationaal"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TrajectCodeType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de unieke code behorende bij een traject aan.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="10"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TrajectLiggingType">
+		<xsd:annotation>
+			<xsd:documentation>De trajecten zijn opgedeeld naar ligging.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:enumeration value="VolledigNL"/>
+			<xsd:enumeration value="DeelsNL"/>
+			<xsd:enumeration value="NietNL"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TrajectVervoerderType">
+		<xsd:annotation>
+			<xsd:documentation>Vervoerder, die gebruik maakt van de infra behorend bij dit traject.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="32"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TreindienstNormaalCodeType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de unieke code behorende bij een treindienstnormaal selectie aan. 
+			Is een vaste waarde omdat in een publicatiesysteem hieraan een businessregel kan zijn gekoppeld.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="3"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TreinFormuleCodeType">
+		<xsd:restriction base="xsd:nonNegativeInteger"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="TreinNummerRichtingType">
+		<xsd:annotation>
+			<xsd:documentation>Richting van de trein aan de hand van het treinnummer Oneven of Even.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Even"/>
+			<xsd:enumeration value="Oneven"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TreinNummerType">
+		<xsd:annotation>
+			<xsd:documentation>Een unieke identificatie voor een trein op een bepaalde verkeers-/patroondag.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:positiveInteger">
+			<xsd:minInclusive value="1"/>
+			<xsd:maxInclusive value="999999"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TreinSerieCodeType">
+		<xsd:annotation>
+			<xsd:documentation>Code van de Treinserie</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:positiveInteger"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="TreinSerieInMaatregelCodeType">
+		<xsd:restriction base="xsd:positiveInteger"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="TreinSoortCodeType">
+		<xsd:annotation>
+			<xsd:documentation>De commerciꫥ/marketing aanduiding van een treinbeweging.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="3"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TreinSoortOmschrijvingType">
+		<xsd:annotation>
+			<xsd:documentation>Omschrijving van de treinsoort.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="17"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="UICCodeType">
+		<xsd:annotation>
+			<xsd:documentation>Het element UICCode bevat een codering voor een station volgens UIC. Maximale lengte is 7 karakters.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="7"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="UTCMilliSecResolutieType">
+		<xsd:annotation>
+			<xsd:documentation>Het tijdstip in UTC in het formaat YYYY-MM-DDTHH:MM:SS.SSSZ</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:dateTime"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="UTCSecResolutieType">
+		<xsd:annotation>
+			<xsd:documentation>Het tijdstip in UTC in het formaat YYYY-MM-DDTHH:MM:SSZ</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:dateTime"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="VersieType">
+		<xsd:annotation>
+			<xsd:documentation>xsd accepteert alle versies.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="VerstoringFaseType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de fase aan waarin een ernstige verstoring zich bevindt, fase 1A = eerste melding (onduidelijke situatie), 1B = duidelijke situatie, fase 2 = versperringsmaatregel bekend, fase 3 = inzet alternatief vervoer, fase 4 = infrabeperking opgelost, fase 5 = afmelding, wordt niet gevuld bij Geplande Werkzaamheden en Extra Trein.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:enumeration value="1A"/>
+			<xsd:enumeration value="1B"/>
+			<xsd:enumeration value="2"/>
+			<xsd:enumeration value="3"/>
+			<xsd:enumeration value="4"/>
+			<xsd:enumeration value="5"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="VerstoringSoortType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de soort verstoring aan, mogelijke waarden EV = Ernstige Verstoring, GV = Geplande Verstoring en ET = Evenement. </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="EV"/>
+			<xsd:enumeration value="GV"/>
+			<xsd:enumeration value="ET"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="VertragingsKeuzeCodeType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de unieke code behorende bij eenVertragingsKeuze aan. 
+			Is een vaste waarde omdat in een publicatiesysteem hieraan een businessregel kan zijn gekoppeld.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="3"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="VertragingsWaardeType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de selecteerbare vertragingswaarden in minuten&gt; </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:nonNegativeInteger">
+			<xsd:maxInclusive value="240"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="VervoerderCodeType">
+		<xsd:restriction base="xsd:nonNegativeInteger"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="VervoerderNaamType">
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:maxLength value="32"/>
+			<xsd:minLength value="1"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="VrijgaveTijdType">
+		<xsd:annotation>
+			<xsd:documentation>Timestamp in UTC</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="UTCSecResolutieType"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="WijzigingTypeBerichtType">
+		<xsd:annotation>
+			<xsd:documentation>Type wijziging. Kan de waardes "N" (nieuw), W (gewijzigd) en V (vervallen) aannemen.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="N"/>
+			<xsd:enumeration value="W"/>
+			<xsd:enumeration value="V"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

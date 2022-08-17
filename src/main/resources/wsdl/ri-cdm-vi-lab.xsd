@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 2014-09-09	1.0	Marcel Sciarone	Leveren PatroonInformatieLandelijk -->
+<!-- 2014-10-17	1.0.1	Marcel Sciarone	Fouten in Naamgeving, kardinaliteit en optionaliteit t.o.v. InfoPlus opgelost -->
+<!-- 2014-11-05	1.0.2	Marcel Sciarone	Ondersteuning InfoPlus xsd pi_reisinfoproduct_pil_v1.24 -->
+<!--														TijdVak in SignaleringVerstoring is optioneel geworden -->
+<!-- 2015-09-08	1.0.3	Marcel Sciarone	Redactievelden -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:ns:cdm:reisinformatie:data:vi:1" targetNamespace="urn:ns:cdm:reisinformatie:data:vi:1" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xsd:include schemaLocation="ri-cdm-common-vi.xsd"/>
+	<!--RPA, DVS *************************************************************************************-->
+	<!--**********************************************************************************************-->
+	<xsd:element name="ReisInformatieProductPatroonInformatieLandelijk" type="ReisInformatieProductPatroonInformatieLandelijkType">
+		<xsd:annotation>
+			<xsd:documentation>Het element LandelijkePatroonInformatie bevat de landelijke gegevens van één geplande of ongeplande verstoring op één bepaalde geldigheidsdatum.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="ActueleLandelijkeBerichtenType">
+		<xsd:sequence>
+			<xsd:element name="LandelijkBericht" type="LandelijkBerichtType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="Versie" type="VersieType" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="BaanvakType">
+		<xsd:annotation>
+			<xsd:documentation>Opsomming van dienstregelpunten van een door infrabeperking getroffen "baanvak" tbv signalering van de verstoring naar de reisplanner.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="StationCode" type="StationCodeType" minOccurs="2" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="GeefActueleLandelijkeBerichtenFaultMessageType">
+		<xsd:sequence>
+			<xsd:element name="Foutnummer" type="FoutnummerType"/>
+			<xsd:element name="Omschrijving" type="xsd:string"/>
+			<xsd:element name="GeefActueleLandelijkeBerichtenRequestMessage" type="GeefActueleLandelijkeBerichtenRequestMessageType"/>
+		</xsd:sequence>
+		<xsd:attribute name="TimeStamp" type="TimeStampType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Geeft de datum en tijd weer  wanneer het antwoord is samengesteld.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="GeefActueleLandelijkeBerichtenRequestMessageType">
+		<xsd:annotation>
+			<xsd:documentation>De vraag voor actuele vertrektijden</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="TaalCodes" type="TaalCodesType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation> Als er het TaalCodes element ontbreekt dan wordt de Nederlandse redactie gebruikt.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Aanvrager" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Geeft aan wie de aanvrager is (voor statistieken).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="TimeStamp" type="TimeStampType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Geeft de datum en tijd weer  wanneer deze vraag is gesteld.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="GeefActueleLandelijkeBerichtenResponseMessageType">
+		<xsd:annotation>
+			<xsd:documentation>Dit element bevat een actueel overzicht van alle landelijke berichten.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="BerichtStatus" type="xsd:int">
+				<xsd:annotation>
+					<xsd:documentation>Status van het antwoord. 10=succesvolle afhandeling, 20=geen actuele reisinformatie beschikbaar. 30=geen reisinformatie beschikbaar.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="GeefActueleLandelijkeBerichtenRequestMessage" type="GeefActueleLandelijkeBerichtenRequestMessageType"/>
+			<xsd:element name="ActueleLandelijkeBerichten" type="ActueleLandelijkeBerichtenType" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="TimeStamp" type="TimeStampType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Geeft de datum en tijd weer  wanneer het antwoord is samengesteld.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="LABOmreisAdviesType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft een samengevoegd omreisadvies weer.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="StationVanaf" type="StationType"/>
+			<xsd:element name="BestemmingStation" type="StationType" maxOccurs="2"/>
+			<xsd:element name="Richting" type="RichtingType"/>
+			<xsd:element name="Advies" type="OmreisAdviesType"/>
+			<xsd:element name="OmreisExtraReistijd" type="OmreisExtraReistijdType"/>
+			<xsd:element name="PresentatieOmreisAdvies" type="MeertaligeUitingenType" minOccurs="0"/>
+			<!--xsd:element ref="OmreisAdviesTraject" maxOccurs="unbounded"/-->
+			<xsd:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="LandelijkBerichtType">
+		<xsd:sequence>
+			<xsd:element name="ReisInformatieProductId" type="ReisInformatieProductIdType"/>
+			<xsd:element name="LandelijkPatroonInformatie" type="LandelijkePatroonInformatieType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="LandelijkePatroonInformatieType">
+		<xsd:annotation>
+			<xsd:documentation>Het element LandelijkePatroonInformatie bevat de landelijke gegevens van één geplande of ongeplande verstoring op één bepaalde geldigheidsdatum.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="DossierNummer" type="DossierNummerType"/>
+			<xsd:element name="DossierVolgNummer" type="DossierVolgNummerType"/>
+			<xsd:element name="DossierNaam" type="DossierNaamType"/>
+			<xsd:element name="VerstoringSoort" type="VerstoringSoortType"/>
+			<xsd:element name="VerstoringFase" type="VerstoringFaseType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Alleen bij EV; bij een GV of ET afwezig.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="VerstoringImpact" type="ImpactType"/>
+			<xsd:element name="ImpactOmschrijving" type="ImpactOmschrijvingType"/>
+			<xsd:element name="RegistratieTijd" type="RegistratieTijdType"/>
+			<xsd:element name="VrijgaveTijd" type="VrijgaveTijdType"/>
+			<xsd:element name="PresentatieMeldTijd" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:element name="WijzigingTypeBericht" type="WijzigingTypeBerichtType"/>
+			<xsd:element name="Situatie" type="SituatieLABType"/>
+			<xsd:element name="PresentatieLocatie" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:element name="PresentatieSituatie" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:element name="DringendAdvies" type="DringendAdviesType" minOccurs="0"/>
+			<xsd:element name="PresentatieDringendAdvies" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:element name="TreinMaatregel" type="TreinMaatregelType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="AVVMaatregel" type="AVVMaatregelType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="OmreisAdviesSet" type="OAPerTijdvakType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Bij een EV is er maximaal maar één set. Bij een GV of ET is er een set per Tijdvak mogelijk. Bij het ontbreken van omreisadviezen is er helemaal geen samengesteld omreisadvies.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="OmreizenMogelijk" type="IndicatieType"/>
+			<xsd:element name="PresentatieOmreizenMogelijk" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:element name="SamenvattingMateVertraging" type="MateVertragingType" minOccurs="0"/>
+			<xsd:element name="PresentatieSamenvattingMateVertraging" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:element name="SamenvattingAVVBijBaanvak" type="SamenvattingAVVPerBaanvakType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Bij een EV is er maximaal maar één Samenvatting per baanvak. Bij een GV of ET is één Samenvatting per Tijdvak per baanvak mogelijk. Bij het ontbreken vanAVV is er helemaal geen samenvatting van dit type. Ook bij een GebiedBeperking is deze samenvatting er niet.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="SamenvattingAVVDossier" type="SamenvattingAVVMaatregelenType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Bij een EV is er maximaal maar één Samenvatting. Bij een GV of ET is één Samenvatting per Tijdvak mogelijk voor het dossier. Bij het ontbreken van AVV is er helemaal geen samenvatting.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="OAPerTijdvakType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft een samengevoegd omreisadvies weer voor een EV of één tijdvak van een GV/ET.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Tijdvak" type="TijdvakType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Tijdvak is afwezig bij een EV, en aanwezig bij een GV of ET.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="OmreisAdvies" type="LABOmreisAdviesType" maxOccurs="5"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ReisInformatieProductPatroonInformatieLandelijkType">
+		<xsd:sequence>
+			<xsd:element name="RIPAdministratie" type="RIPAdministratieType"/>
+			<xsd:element name="LandelijkePatroonInformatie" type="LandelijkePatroonInformatieType"/>
+		</xsd:sequence>
+		<xsd:attribute name="Versie" type="VersieType" use="required">
+			<xsd:annotation>
+				<xsd:documentation>Het Versie attribuut kan gebruikt worden voor versiebeheer.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="TimeStamp" type="TimeStampType" use="required"/>
+		<xsd:anyAttribute namespace="##other" processContents="lax"/>
+	</xsd:complexType>
+	<xsd:complexType name="SignaleringVerstoringType">
+		<xsd:sequence>
+			<xsd:element name="TijdVak" type="TijdvakType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="VerstoordBaanvak" type="VerstoordBaanvakType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="SituatieLABType">
+		<xsd:annotation>
+			<xsd:documentation>Geeft de situatie van de verstoring weer</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:choice>
+				<xsd:sequence>
+					<xsd:element name="EVBeginTijd" type="EVBeginTijdType"/>
+					<xsd:element name="PresentatieEVBeginTijd" type="MeertaligeUitingenType" minOccurs="0"/>
+					<xsd:element name="AanvullendAdvies" type="AanVullendAdviesType" minOccurs="0"/>
+				</xsd:sequence>
+				<xsd:sequence>
+					<xsd:element name="PeriodeKalenderMetAanvullendAdvies" type="PeriodeKalenderMetAanvullendAdvies" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:choice>
+			<xsd:element name="PresentatiePeriode" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:element name="PresentatieAanvullendAdvies" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:element name="BaanvakBeperking" type="BaanvakBeperkingType" maxOccurs="unbounded"/>
+			<xsd:element name="SignaleringVerstoring" type="SignaleringVerstoringType">
+				<xsd:annotation>
+					<xsd:documentation>Opsomming van dienstregelpunten van een door infrabeperking getroffen "baanvak" tbv signalering van de verstoring naar de reisplanner.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:choice>
+				<xsd:sequence>
+					<xsd:element name="AanleidingCode" type="AanleidingCodeType"/>
+					<xsd:element name="OorzaakKort" type="OorzaakKortType"/>
+					<xsd:element name="OorzaakLang" type="OorzaakLangType"/>
+				</xsd:sequence>
+				<xsd:element name="EvenementNaam" type="EvenementNaamType"/>
+			</xsd:choice>
+			<xsd:element name="PresentatieOorzaak" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:element name="Prognose" type="PrognoseType" minOccurs="0"/>
+			<xsd:element name="PresentatiePrognose" type="MeertaligeUitingenType" minOccurs="0"/>
+			<xsd:element name="InformatiePersoneel" type="InformatiePersoneelType" minOccurs="0"/>
+			<xsd:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="VerstoordBaanvakType">
+		<xsd:sequence>
+			<xsd:element name="Baanvak" type="BaanvakType" maxOccurs="2"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

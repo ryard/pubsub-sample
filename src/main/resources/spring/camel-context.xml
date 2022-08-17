@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:osgi="http://www.springframework.org/schema/osgi" xmlns:cxf="http://camel.apache.org/schema/cxf"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd       http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd">
+
+	<cxf:cxfEndpoint id="cXFPIL" address="/reisinformatie/PILPush/v1/publish/"
+		serviceName="a:PILPushExport_InfoPlusPILInterfaceHttpService"
+		wsdlURL="wsdl/PPV_Med_PILPush_PILPushExport.wsdl" serviceClass="ns.cdm.reisinformatie.message.landelijkbericht._1.InfoPlusPILInterface"
+		xmlns:a="urn:ns:cdm:reisinformatie:message:landelijkbericht:1" >
+		<!-- <cxf:handlers>
+			<ref bean="soapMessageLogger"/>
+		</cxf:handlers> -->
+		<!-- <cxf:properties>
+			<entry key="dataFormat" value="PAYLOAD" />
+		</cxf:properties> -->
+	</cxf:cxfEndpoint>
+
+	<bean id="processor" class="nl.virtualsciences.fuse.soap.pil.CamelProcessor" />
+	
+    <!-- <bean id="_jmsConnectionFactory" class="org.apache.qpid.jms.JmsConnectionFactory">
+        <property name="remoteURI" value="amqp://localhost:31616"/>
+        <property name="username" value="admin"/>
+        <property name="password" value="admin"/>
+    </bean> -->
+    
+	<bean id="amqp" class="org.apache.camel.component.amqp.AMQPComponent">
+		<property name="connectionFactory">
+			<bean class="org.apache.qpid.jms.JmsConnectionFactory">
+				<property name="remoteURI" value="amqp://localhost:31616" />
+				<property name="username" value="admin"/>
+				<property name="password" value="admin"/>
+				<!-- <property name="topicPrefix" value="topic://" /> -->  <!-- only necessary when connecting to ActiveMQ over AMQP 1.0 -->
+			</bean>
+		</property>
+	</bean>
+	
+	<camelContext id="camelId" xmlns="http://camel.apache.org/schema/spring">
+
+		<camel:route id="publish_pil_message">
+			<camel:from uri="cxf:bean:cXFPIL?dataFormat=PAYLOAD" />
+			<camel:to id="_remove_document_elem" uri="xslt-saxon:xslt/remove_document_element.xslt"/>
+			<camel:to id="_to_xslt1" uri="xslt:xslt/RedactieseviceVerstoringsinformatie.xslt?saxon=true"/>
+			<camel:to id="_to_xslt2" uri="xslt-saxon:xslt/english2dutchdate.xslt"/>
+			<camel:log id="_log_body" loggingLevel="INFO" message="The payload of the transformed message is: ${body}"/>
+			<camel:to id="amq_route_to_topic" uri="amqp:topic:pilTopic?jmsMessageType=Text&amp;disableReplyTo=true"/>
+			<camel:process ref="processor" />
+		</camel:route>
+		
+		<camel:route id="consume_pil_message">
+			<camel:from uri="amqp:topic:pilTopic?jmsMessageType=Text&amp;clientId=pilMsgConsumer&amp;subscriptionName=pilMsg&amp;subscriptionDurable=true" />
+			<camel:log id="_log_msg_body" loggingLevel="INFO" message="The body of the consumed message is: ${body}"/>
+		</camel:route>
+
+	</camelContext>
+</beans>

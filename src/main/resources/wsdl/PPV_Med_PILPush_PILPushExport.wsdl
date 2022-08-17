@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 2014-09-10	Marcel Sciarone	Leveren PatroonInformatieLandelijk aan PPV-->
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:pil="urn:ns:cdm:reisinformatie:message:landelijkbericht:1" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" name="PILPushExport_InfoPlusPILInterfaceHttp_Service" targetNamespace="urn:ns:cdm:reisinformatie:message:landelijkbericht:1">
+	<wsdl:types>
+		<xs:schema xmlns:vi="urn:ns:cdm:reisinformatie:data:vi:1" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="urn:ns:cdm:reisinformatie:message:landelijkbericht:1" elementFormDefault="qualified" attributeFormDefault="unqualified">
+			<xs:import namespace="urn:ns:cdm:reisinformatie:data:vi:1" schemaLocation="ri-cdm-vi-lab.xsd"/>
+			<xs:element name="ReisInformatieProductPILHeaderInfo">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ESBTimeStamp" type="xs:dateTime"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="PutReisInformatieBoodschapIn">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="vi:ReisInformatieProductPatroonInformatieLandelijk"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="PutReisInformatieBoodschapOut">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="pil:ReisInformatieProductPILResponse"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ReisInformatieProductPILResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Success">
+							<xs:annotation>
+								<xs:documentation>Geeft aan of het bericht succesvol (OK) of niet succesvol (NOK) is aangekomen op het afnemende systeem</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="OK"/>
+									<xs:enumeration value="NOK"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="ErrorCode" type="xs:string" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>In geval van een foutsituatie (Success=NOK) vult het afnemende systeem dit veld met een unieke foutcode.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ErrorMessage" type="xs:string" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>In geval van een foutsituatie (Success=NOK) vult het afnemende systeem dit veld met een relevante tekstuele omschrijving.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="PutReisInformatieBoodschapRequest">
+		<wsdl:part name="PutReisInformatieBoodschapIn" element="pil:PutReisInformatieBoodschapIn"/>
+	</wsdl:message>
+	<wsdl:message name="PutReisInformatieBoodschapResponse">
+		<wsdl:part name="PutReisInformatieBoodschapOut" element="pil:PutReisInformatieBoodschapOut"/>
+	</wsdl:message>
+	<wsdl:message name="ReisInformatieProductPILHeaderInfo">
+		<wsdl:part name="Info" element="pil:ReisInformatieProductPILHeaderInfo"/>
+	</wsdl:message>
+	<wsdl:portType name="InfoPlusPILInterface">
+		<wsdl:operation name="PutReisInformatieBoodschap">
+			<wsdl:input message="pil:PutReisInformatieBoodschapRequest"/>
+			<wsdl:output message="pil:PutReisInformatieBoodschapResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="PILPushExport_InfoPlusPILInterfaceHttpBinding" type="pil:InfoPlusPILInterface">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="PutReisInformatieBoodschap">
+			<soap:operation soapAction="PutReisInformatieBoodschap"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+				<soap:header message="pil:ReisInformatieProductPILHeaderInfo" part="Info" use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="PILPushExport_InfoPlusPILInterfaceHttpService">
+		<wsdl:port name="PILPushExport_InfoPlusPILInterfaceHttpPort" binding="pil:PILPushExport_InfoPlusPILInterfaceHttpBinding">
+			<soap:address location="http://localhost:9080/reisinformatie/PILPush/v1/publish"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
